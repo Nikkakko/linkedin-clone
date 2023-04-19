@@ -1,6 +1,7 @@
-import { FC } from 'react';
+import { FC, useState } from 'react';
 import LoginComponent from '../components/LoginComponent';
 import { LoginAPI } from '../api/AuthAPI';
+import styled from 'styled-components';
 
 interface LoginProps {}
 
