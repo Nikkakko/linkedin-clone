@@ -2,6 +2,7 @@ import { DefaultTheme } from 'styled-components';
 
 export const theme: DefaultTheme = {
   colors: {
-    linkedIn: '#0a66c2',
+    linkedInBlue: '#0072b1',
+    linkedInBlue1: '#0073b1',
   },
 };
