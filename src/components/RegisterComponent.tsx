@@ -1,7 +1,9 @@
 import { FC, useState } from 'react';
 import GoogleButton from 'react-google-button';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
+import { GoogleLoginAPI, RegisterAPI } from '../api/AuthAPI';
+import { toast } from 'react-toastify';
 interface RegisterComponentProps {}
 
 type Credentials = {
@@ -16,11 +18,32 @@ const RegisterComponent: FC<RegisterComponentProps> = ({}) => {
     password: '',
   });
 
+  const navigate = useNavigate();
+
   const handleOnChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setCredentials({ ...credentials, [e.target.name]: e.target.value });
   };
 
-  const googleLogin = async () => {};
+  const login = async () => {
+    try {
+      let res = await RegisterAPI(credentials.email, credentials.password);
+      toast.success('Account created successfully');
+      navigate('/login');
+    } catch (error) {
+      toast.error('Something went wrong');
+    }
+  };
+
+  const googleLogin = async () => {
+    try {
+      let res = await GoogleLoginAPI();
+      toast.success('Signed in successfully');
+      navigate('/home');
+    } catch (error) {
+      console.log(error);
+      toast.error('Something went wrong');
+    }
+  };
   return (
     <RegistWrapper>
       <RegistTitle>Make the most of your professional life</RegistTitle>
@@ -39,6 +62,7 @@ const RegisterComponent: FC<RegisterComponentProps> = ({}) => {
             name='password'
             onChange={handleOnChange}
             value={credentials.password}
+            autoComplete='off'
           />
 
           <ShowPassword onClick={() => setShowPassword(!showPassword)}>
@@ -46,7 +70,7 @@ const RegisterComponent: FC<RegisterComponentProps> = ({}) => {
           </ShowPassword>
         </Form>
 
-        <RegisterButton>Agree & Join</RegisterButton>
+        <RegisterButton onClick={login}>Agree & Join</RegisterButton>
 
         <Line data-content='or' />
 
@@ -64,7 +88,7 @@ const RegisterComponent: FC<RegisterComponentProps> = ({}) => {
 
         <Newmember>
           Already on LinkedIn?
-          <Link to='/login'>
+          <Link to='/'>
             <span>Sign in</span>
           </Link>
         </Newmember>
@@ -239,6 +263,10 @@ const Newmember = styled.p`
       text-decoration: underline;
     }
     cursor: pointer;
+  }
+
+  a {
+    text-decoration: none;
   }
 `;
 

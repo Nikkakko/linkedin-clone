@@ -1,21 +1,22 @@
 import { FC, useContext, useEffect, useState } from 'react';
-import LoginComponent from '../components/LoginComponent';
+import HomeComponent from '../components/HomeComponent';
 import { useNavigate } from 'react-router-dom';
 import { UserContext } from '../context/UserContext';
 import Loader from '../components/common/Loader';
 
-interface LoginProps {}
+interface HomeProps {}
 
-const Login: FC<LoginProps> = ({}) => {
-  const user = useContext(UserContext);
+const Home: FC<HomeProps> = ({}) => {
   let navigate = useNavigate();
+  const user = useContext(UserContext);
 
   useEffect(() => {
-    if (user) {
-      navigate('/home');
+    if (!user) {
+      navigate('/');
     }
   }, [user]);
-  return <LoginComponent />;
+
+  return <HomeComponent />;
 };
 
-export default Login;
+export default Home;

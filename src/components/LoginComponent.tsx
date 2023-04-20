@@ -4,7 +4,7 @@ import styled from 'styled-components';
 import { useForm, SubmitHandler } from 'react-hook-form';
 import GoogleButton from 'react-google-button';
 import { toast } from 'react-toastify';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 interface LoginComponentProps {}
 
@@ -31,11 +31,13 @@ const LoginComponent: FC<LoginComponentProps> = ({}) => {
   const handleOnChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setCredentials({ ...credentials, [e.target.name]: e.target.value });
   };
+  const navigate = useNavigate();
 
   const login = async () => {
     try {
       let res = await LoginAPI(credentials.email, credentials.password);
       toast.success('Signed in successfully');
+      navigate('/home');
     } catch (error) {
       toast.error('Please check your credentials');
     }
@@ -45,6 +47,7 @@ const LoginComponent: FC<LoginComponentProps> = ({}) => {
     try {
       let res = await GoogleLoginAPI();
       toast.success('Signed in successfully');
+      navigate('/home');
     } catch (error) {
       console.log(error);
       toast.error('Something went wrong');
@@ -194,6 +197,10 @@ const Newmember = styled.p`
       text-decoration: underline;
     }
     cursor: pointer;
+  }
+
+  a {
+    text-decoration: none;
   }
 `;
 

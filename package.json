@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@types/styled-components": "^5.1.26",
+    "antd": "^5.4.3",
     "firebase": "^9.20.0",
     "localforage": "^1.10.0",
     "match-sorter": "^6.3.1",

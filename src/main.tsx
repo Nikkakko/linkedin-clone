@@ -7,13 +7,16 @@ import { ThemeProvider } from 'styled-components';
 import { theme } from './styles/theme';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { UserProvider } from './context/UserContext';
 
 ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
   <React.StrictMode>
-    <ThemeProvider theme={theme}>
-      <GlobalStyles />
-      <ToastContainer />
-      <App />
-    </ThemeProvider>
+    <UserProvider>
+      <ThemeProvider theme={theme}>
+        <GlobalStyles />
+        <ToastContainer />
+        <App />
+      </ThemeProvider>
+    </UserProvider>
   </React.StrictMode>
 );
