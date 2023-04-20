@@ -10,7 +10,7 @@ export const GlobalStyles = createGlobalStyle`
 
     body {
         color: #212121;
-        background-color: rgba(224, 224, 224);
+        background-color: ${({ theme }) => theme.colors.BgColor};
         font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
     }
 

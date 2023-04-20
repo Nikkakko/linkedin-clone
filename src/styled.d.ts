@@ -6,6 +6,7 @@ declare module 'styled-components' {
     colors: {
       linkedInBlue: string;
       linkedInBlue1: string;
+      BgColor: string;
     };
   }
 }

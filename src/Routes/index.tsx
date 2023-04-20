@@ -10,6 +10,7 @@ import Register from '../pages/Register';
 import RootLayout from '../layout/RootLayout';
 import Home from '../pages/Home';
 import { PrivateRoute } from './PrivateRoute';
+import HomeLayout from '../layout/HomeLayout';
 
 export const router = createBrowserRouter(
   createRoutesFromElements(
@@ -18,7 +19,9 @@ export const router = createBrowserRouter(
         <Route path='/' element={<Login />} />
         <Route path='/register' element={<Register />} />
       </Route>
-      <Route path='/home' element={<Home />} />
+      <Route path='/home' element={<HomeLayout />}>
+        <Route index element={<Home />} />
+      </Route>
     </Route>
   )
 );
