@@ -10,10 +10,29 @@ import {
 } from 'react-icons/ai';
 import { BsBriefcase } from 'react-icons/bs';
 import { BiUserCircle } from 'react-icons/bi';
+import { useNavigate } from 'react-router-dom';
+import { NavLink } from 'react-router-dom';
+
+type NavItem = {
+  path: string;
+  name: string;
+  icon: JSX.Element;
+};
 
 interface TopbarProps {}
 
+const navLinks: NavItem[] = [
+  { path: '/home', name: 'Home', icon: <AiOutlineHome /> },
+  { path: '/mynetwork', name: 'My Network', icon: <AiOutlineUserSwitch /> },
+  { path: '/jobs', name: 'Jobs', icon: <BsBriefcase /> },
+  { path: '/messages', name: 'Messages', icon: <AiOutlineMessage /> },
+  { path: '/notifications', name: 'Notifications', icon: <AiOutlineBell /> },
+];
+
 const Topbar: FC<TopbarProps> = ({}) => {
+  const navigate = useNavigate();
+
+  const handleHomeClick = () => {};
   return (
     <Container>
       <TopbarMain>
@@ -24,17 +43,14 @@ const Topbar: FC<TopbarProps> = ({}) => {
           }}
         />
         <Icons>
-          <AiOutlineHome />
-          <AiOutlineUserSwitch />
-          <BsBriefcase />
-          <AiOutlineMessage />
-          <AiOutlineBell />
+          {navLinks.map((link: NavItem) => (
+            <StyledNavLink to={link.path} key={link.path}>
+              {link.icon}
+            </StyledNavLink>
+          ))}
         </Icons>
-        <BiUserCircle
-          style={{
-            marginLeft: 'auto',
-          }}
-        />
+
+        <ProfileUser onClick={() => navigate('/profile')} />
       </TopbarMain>
     </Container>
   );
@@ -57,11 +73,6 @@ const TopbarMain = styled.div`
   svg {
     font-size: 35px;
     cursor: pointer;
-    color: #5e5e5e;
-
-    &:hover {
-      color: #020e1b;
-    }
   }
 
   /* padding: 0 24px; */
@@ -81,4 +92,26 @@ const Icons = styled.div`
   margin: 0 auto;
 `;
 
+const StyledNavLink = styled(NavLink)`
+  color: #5e5e5e;
+
+  &:hover {
+    color: #020e1b;
+  }
+
+  &.active {
+    color: #020e1b;
+  }
+`;
+
+const ProfileUser = styled(BiUserCircle)`
+  cursor: pointer;
+  margin-left: auto;
+
+  color: #5e5e5e;
+
+  &:hover {
+    color: #020e1b;
+  }
+`;
 export default Topbar;
