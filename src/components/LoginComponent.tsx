@@ -1,7 +1,7 @@
 import { FC, useState } from 'react';
 import { GoogleLoginAPI, LoginAPI, RegisterAPI } from '../api/AuthAPI';
 import styled from 'styled-components';
-import { useForm, SubmitHandler } from 'react-hook-form';
+
 import GoogleButton from 'react-google-button';
 import { toast } from 'react-toastify';
 import { Link, useNavigate } from 'react-router-dom';
@@ -18,15 +18,7 @@ const LoginComponent: FC<LoginComponentProps> = ({}) => {
     email: '',
     password: '',
   });
-  const {
-    register,
-    handleSubmit,
-    watch,
-    formState: { errors },
-  } = useForm();
-
   const [showPassword, setShowPassword] = useState<boolean>(false);
-  const [showRegister, setShowRegister] = useState<boolean>(false);
 
   const handleOnChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setCredentials({ ...credentials, [e.target.name]: e.target.value });

@@ -1,6 +1,7 @@
-import { FC } from 'react';
+import { FC, useContext } from 'react';
 import styled from 'styled-components';
 import PostStatus from './common/PostUpdate';
+import { UserContext } from '../context/UserContext';
 
 interface HomeComponentProps {}
 

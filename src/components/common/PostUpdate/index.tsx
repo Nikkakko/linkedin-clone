@@ -1,24 +1,34 @@
-import { FC, useState } from 'react';
+import React, { FC, useMemo, useState, useContext } from 'react';
 import styled from 'styled-components';
 import PostModal from '../Modal';
-import { AddStatus } from '../../../api/FirestoreAPI';
+import { AddStatus, getStatus } from '../../../api/FirestoreAPI';
 import { toast } from 'react-toastify';
+import { StatusType } from '../../../types';
+import PostsCard from '../PostsCard';
 
 interface PostStatusProps {}
 
 const PostStatus: FC<PostStatusProps> = ({}) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [status, setStatus] = useState('' as string | null);
+  const [allStatuses, setAllStatuses] = useState([] as StatusType[]);
 
-  const handleAddPost = () => {
+  const handleAddPost = async () => {
     if (status) {
-      AddStatus(status);
+      await AddStatus(status);
       toast.success('Post added successfully');
       setStatus('');
+      setIsModalOpen(false);
     } else {
-      toast.error('Please enter a status');
+      toast.error('Post cannot be empty');
     }
   };
+
+  console.log(allStatuses);
+
+  useMemo(() => {
+    getStatus(setAllStatuses);
+  }, []);
 
   return (
     <Container>
@@ -39,6 +49,13 @@ const PostStatus: FC<PostStatusProps> = ({}) => {
         status={status}
         addPost={handleAddPost}
       />
+
+      <AllPosts>
+        {allStatuses.length === 0 && <p>No posts yet</p>}
+        {allStatuses.map((posts, index) => (
+          <PostsCard key={posts.id} posts={posts} />
+        ))}
+      </AllPosts>
     </Container>
   );
 };
@@ -79,6 +96,17 @@ const PostButton = styled.button`
   &:hover {
     background-color: #f2f2f2;
   }
+`;
+
+const AllPosts = styled.div`
+  margin-top: 32px;
+  width: 80%;
+  height: 100%;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
 `;
 
 export default PostStatus;

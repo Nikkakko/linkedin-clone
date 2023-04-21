@@ -7,3 +7,12 @@ export interface FirebaseUser extends firebase.User {
     role?: string;
   };
 }
+
+export interface StatusType {
+  id: string;
+  photoURL: string;
+  status: string;
+  timestamp: firebase.firestore.Timestamp;
+  uid: string;
+  username: string;
+}
