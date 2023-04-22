@@ -24,8 +24,6 @@ const PostStatus: FC<PostStatusProps> = ({}) => {
     }
   };
 
-  console.log(allStatuses);
-
   useMemo(() => {
     getStatus(setAllStatuses);
   }, []);

@@ -7,7 +7,8 @@ import Loader from '../components/common/Loader';
 interface LoginProps {}
 
 const Login: FC<LoginProps> = ({}) => {
-  const user = useContext(UserContext);
+  const { user } = useContext(UserContext);
+
   let navigate = useNavigate();
 
   useEffect(() => {

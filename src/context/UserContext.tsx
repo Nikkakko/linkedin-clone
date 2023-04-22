@@ -1,9 +1,10 @@
 import * as React from 'react';
 import { createContext, useEffect, useState } from 'react';
 import { auth } from '../firebaseConfig';
-import { User } from 'firebase/auth';
+import { User, signOut } from 'firebase/auth';
 import Loader from '../components/common/Loader';
 import { StatusType } from '../types';
+import { useNavigate } from 'react-router-dom';
 
 interface UserContextValue {
   user: User | null;
@@ -26,6 +27,7 @@ export const UserProvider = ({ children }: { children: React.ReactNode }) => {
     setIsLoading(true);
     const unsubscribe = auth.onAuthStateChanged(firebaseUser => {
       setUser(firebaseUser);
+      // signOut(auth);
       setIsLoading(false);
     });
 

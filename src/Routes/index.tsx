@@ -11,6 +11,8 @@ import RootLayout from '../layout/RootLayout';
 import Home from '../pages/Home';
 import { PrivateRoute } from './PrivateRoute';
 import HomeLayout from '../layout/HomeLayout';
+import Profile from '../pages/Profile';
+import ProfileEdit from '../components/common/ProfileEdit';
 
 export const router = createBrowserRouter(
   createRoutesFromElements(
@@ -21,6 +23,10 @@ export const router = createBrowserRouter(
       </Route>
       <Route path='/home' element={<HomeLayout />}>
         <Route index element={<Home />} />
+      </Route>
+      <Route path='/profile' element={<HomeLayout />}>
+        <Route index element={<Profile />} />
+        <Route path='/edit/:id' element={<ProfileEdit />} />
       </Route>
     </Route>
   )

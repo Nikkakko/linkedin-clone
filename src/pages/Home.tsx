@@ -8,7 +8,7 @@ interface HomeProps {}
 
 const Home: FC<HomeProps> = ({}) => {
   let navigate = useNavigate();
-  const user = useContext(UserContext);
+  const { user } = useContext(UserContext);
 
   useEffect(() => {
     if (!user) {

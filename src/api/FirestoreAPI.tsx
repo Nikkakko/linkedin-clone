@@ -6,11 +6,10 @@ import {
   query,
 } from 'firebase/firestore';
 import { auth, firestore } from '../firebaseConfig';
-import { UserContext } from '../context/UserContext';
-import { useContext } from 'react';
 import { StatusType } from '../types';
 
 let docRef = collection(firestore, 'posts');
+let userRef = collection(firestore, 'users');
 
 // void type
 
@@ -38,6 +37,20 @@ export const getStatus = async (setStatus: any) => {
         ...doc.data(),
       })) as StatusType[];
       setStatus(status);
+    });
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const postUserData = async (object: any) => {
+  const { username, email } = object;
+  try {
+    await addDoc(userRef, {
+      username,
+      email,
+      uid: auth.currentUser?.uid,
+      photoURL: auth.currentUser?.photoURL,
     });
   } catch (error) {
     console.log(error);

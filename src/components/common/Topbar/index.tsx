@@ -1,4 +1,4 @@
-import { FC } from 'react';
+import { FC, useState } from 'react';
 import styled from 'styled-components';
 import { LinkedinLogo } from '../../../assets';
 import {
@@ -12,6 +12,7 @@ import { BsBriefcase } from 'react-icons/bs';
 import { BiUserCircle } from 'react-icons/bi';
 import { useNavigate } from 'react-router-dom';
 import { NavLink } from 'react-router-dom';
+import ProfilePopup from '../ProfilePopup';
 
 type NavItem = {
   path: string;
@@ -30,6 +31,8 @@ const navLinks: NavItem[] = [
 ];
 
 const Topbar: FC<TopbarProps> = ({}) => {
+  const [showProfilePopup, setShowProfilePopup] = useState<boolean>(false);
+
   const navigate = useNavigate();
 
   const handleHomeClick = () => {};
@@ -50,7 +53,8 @@ const Topbar: FC<TopbarProps> = ({}) => {
           ))}
         </Icons>
 
-        <ProfileUser onClick={() => navigate('/profile')} />
+        <ProfileUser onClick={() => setShowProfilePopup(!showProfilePopup)} />
+        {showProfilePopup && <ProfilePopup />}
       </TopbarMain>
     </Container>
   );

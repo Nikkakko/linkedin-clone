@@ -1,4 +1,4 @@
-import { useContext } from 'react';
+import { useContext, useEffect } from 'react';
 import { useNavigate, Navigate } from 'react-router-dom';
 import { UserContext } from '../context/UserContext';
 
@@ -7,12 +7,12 @@ interface PrivateRouteProps {
 }
 
 export const PrivateRoute = ({ children }: PrivateRouteProps) => {
-  const user = useContext(UserContext);
+  const { user } = useContext(UserContext);
   const navigate = useNavigate();
 
-  if (!user) {
-    navigate('/');
-  }
+  useEffect(() => {
+    if (!user) navigate('/');
+  }, [user]);
 
   return children;
 };

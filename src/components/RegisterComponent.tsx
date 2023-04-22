@@ -4,9 +4,11 @@ import { Link, useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import { GoogleLoginAPI, RegisterAPI } from '../api/AuthAPI';
 import { toast } from 'react-toastify';
+import { postUserData } from '../api/FirestoreAPI';
 interface RegisterComponentProps {}
 
 type Credentials = {
+  username: string;
   email: string;
   password: string;
 };
@@ -14,6 +16,7 @@ type Credentials = {
 const RegisterComponent: FC<RegisterComponentProps> = ({}) => {
   const [showPassword, setShowPassword] = useState<boolean>(false);
   const [credentials, setCredentials] = useState<Credentials>({
+    username: '',
     email: '',
     password: '',
   });
@@ -24,11 +27,15 @@ const RegisterComponent: FC<RegisterComponentProps> = ({}) => {
     setCredentials({ ...credentials, [e.target.name]: e.target.value });
   };
 
-  const login = async () => {
+  const register = async () => {
     try {
-      let res = await RegisterAPI(credentials.email, credentials.password);
+      let res = await RegisterAPI(
+        credentials.email,
+        credentials.password,
+        credentials.username
+      );
       toast.success('Account created successfully');
-      navigate('/login');
+      navigate('/home');
     } catch (error) {
       toast.error('Something went wrong');
     }
@@ -49,10 +56,20 @@ const RegisterComponent: FC<RegisterComponentProps> = ({}) => {
       <RegistTitle>Make the most of your professional life</RegistTitle>
       <AuthWrapper>
         <Form>
+          <Label>Username (required)</Label>
+          <Input
+            type='username'
+            name='username'
+            placeholder='Your name'
+            onChange={handleOnChange}
+            value={credentials.username}
+            required
+          />
           <Label>Email</Label>
           <Input
             type='email'
             name='email'
+            placeholder='Your email'
             onChange={handleOnChange}
             value={credentials.email}
           />
@@ -60,9 +77,11 @@ const RegisterComponent: FC<RegisterComponentProps> = ({}) => {
           <Input
             type={showPassword ? 'text' : 'password'}
             name='password'
+            placeholder='Your password'
             onChange={handleOnChange}
             value={credentials.password}
             autoComplete='off'
+            pattern='.{6,}'
           />
 
           <ShowPassword onClick={() => setShowPassword(!showPassword)}>
@@ -70,7 +89,7 @@ const RegisterComponent: FC<RegisterComponentProps> = ({}) => {
           </ShowPassword>
         </Form>
 
-        <RegisterButton onClick={login}>Agree & Join</RegisterButton>
+        <RegisterButton onClick={register}>Agree & Join</RegisterButton>
 
         <Line data-content='or' />
 
@@ -183,7 +202,7 @@ const RegisterButton = styled.button`
 const ShowPassword = styled.div`
   position: absolute;
   right: 20px;
-  top: 105px;
+  top: 175px;
   /* padding: 28px; */
 
   span {
