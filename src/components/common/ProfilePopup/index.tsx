@@ -73,6 +73,8 @@ const Container = styled.div`
   right: 400px;
 
   transition: all 0.3s ease-in-out;
+
+  z-index: 100;
 `;
 
 const ImageWrapper = styled.div`

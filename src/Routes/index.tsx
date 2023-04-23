@@ -26,7 +26,6 @@ export const router = createBrowserRouter(
       </Route>
       <Route path='/profile' element={<HomeLayout />}>
         <Route index element={<Profile />} />
-        <Route path='/edit/:id' element={<ProfileEdit />} />
       </Route>
     </Route>
   )

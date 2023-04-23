@@ -1,10 +1,10 @@
-import { FC, useState } from 'react';
+import { FC, useContext, useState } from 'react';
 import GoogleButton from 'react-google-button';
 import { Link, useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import { GoogleLoginAPI, RegisterAPI } from '../api/AuthAPI';
 import { toast } from 'react-toastify';
-import { postUserData } from '../api/FirestoreAPI';
+import { UserContext } from '../context/UserContext';
 interface RegisterComponentProps {}
 
 type Credentials = {
@@ -14,6 +14,7 @@ type Credentials = {
 };
 
 const RegisterComponent: FC<RegisterComponentProps> = ({}) => {
+  const { user } = useContext(UserContext);
   const [showPassword, setShowPassword] = useState<boolean>(false);
   const [credentials, setCredentials] = useState<Credentials>({
     username: '',
@@ -34,6 +35,7 @@ const RegisterComponent: FC<RegisterComponentProps> = ({}) => {
         credentials.password,
         credentials.username
       );
+
       toast.success('Account created successfully');
       navigate('/home');
     } catch (error) {
@@ -45,6 +47,7 @@ const RegisterComponent: FC<RegisterComponentProps> = ({}) => {
     try {
       let res = await GoogleLoginAPI();
       toast.success('Signed in successfully');
+
       navigate('/home');
     } catch (error) {
       console.log(error);

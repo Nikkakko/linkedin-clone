@@ -5,21 +5,27 @@ import { User, signOut } from 'firebase/auth';
 import Loader from '../components/common/Loader';
 import { StatusType } from '../types';
 import { useNavigate } from 'react-router-dom';
+import { getCurretnUser, postUserData } from '../api/FirestoreAPI';
 
 interface UserContextValue {
   user: User | null;
   allStatuses: StatusType[];
   setAllStatuses: React.Dispatch<React.SetStateAction<StatusType[]>>;
+  currentUser: any;
+  setCurrentUser: any;
 }
 
 export const UserContext = createContext<UserContextValue>({
   user: null,
   allStatuses: [],
   setAllStatuses: () => {},
+  currentUser: null,
+  setCurrentUser: () => {},
 });
 
 export const UserProvider = ({ children }: { children: React.ReactNode }) => {
   const [user, setUser] = useState<User | null>(null);
+  const [currentUser, setCurrentUser] = useState<any>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [allStatuses, setAllStatuses] = useState([] as StatusType[]);
 
@@ -27,7 +33,7 @@ export const UserProvider = ({ children }: { children: React.ReactNode }) => {
     setIsLoading(true);
     const unsubscribe = auth.onAuthStateChanged(firebaseUser => {
       setUser(firebaseUser);
-      // signOut(auth);
+      getCurretnUser(setCurrentUser);
       setIsLoading(false);
     });
 
@@ -42,6 +48,12 @@ export const UserProvider = ({ children }: { children: React.ReactNode }) => {
     }
   }, [user]);
 
+  useEffect(() => {
+    if (user) {
+      postUserData();
+    }
+  }, [user]);
+
   if (isLoading) {
     return <Loader />;
   }
@@ -50,6 +62,8 @@ export const UserProvider = ({ children }: { children: React.ReactNode }) => {
     user,
     allStatuses,
     setAllStatuses,
+    currentUser: currentUser,
+    setCurrentUser,
   };
 
   return (

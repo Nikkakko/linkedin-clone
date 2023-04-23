@@ -4,7 +4,10 @@ import {
   onSnapshot,
   orderBy,
   query,
+  doc,
+  updateDoc,
 } from 'firebase/firestore';
+
 import { auth, firestore } from '../firebaseConfig';
 import { StatusType } from '../types';
 
@@ -43,14 +46,69 @@ export const getStatus = async (setStatus: any) => {
   }
 };
 
-export const postUserData = async (object: any) => {
-  const { username, email } = object;
+export const postUserData = async () => {
+  // check if user exists in the database  to prevent duplicate entries
+
+  const q = query(userRef, orderBy('email', 'desc'));
+
   try {
-    await addDoc(userRef, {
+    onSnapshot(q, snapshot => {
+      const users = snapshot.docs.map(doc => ({
+        id: doc.id,
+        ...doc.data(),
+      }));
+
+      const filteredUser = users.filter(
+        (user: any) => user.email === localStorage?.getItem('userEmail')
+      );
+
+      if (filteredUser.length === 0) {
+        // add user to the database
+        addDoc(userRef, {
+          username: auth.currentUser?.displayName,
+          email: auth.currentUser?.email,
+          photoURL: auth.currentUser?.photoURL,
+          headline: '',
+          company: '',
+          college: '',
+          location: '',
+        });
+      }
+    });
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const getCurretnUser = async (setCurrentUser: any) => {
+  const unsubscribe = onSnapshot(userRef, snapshot => {
+    const filteredUser = snapshot.docs
+      .map(doc => ({
+        userID: doc.id,
+        ...doc.data(),
+      }))
+      .filter(
+        (user: any) => user.email === localStorage?.getItem('userEmail')
+      )[0]; // get the first user object that matches the email
+
+    setCurrentUser(filteredUser);
+  });
+
+  return unsubscribe;
+};
+
+export const editProfile = async (object: any, id: string) => {
+  const { username, headline, company, college, location } = object;
+  //get document id
+  const docRef = doc(userRef, id);
+
+  try {
+    await updateDoc(docRef, {
       username,
-      email,
-      uid: auth.currentUser?.uid,
-      photoURL: auth.currentUser?.photoURL,
+      headline,
+      company,
+      college,
+      location,
     });
   } catch (error) {
     console.log(error);

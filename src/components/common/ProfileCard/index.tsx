@@ -9,25 +9,25 @@ import { useNavigate } from 'react-router-dom';
 interface ProfileCardProps {}
 
 const ProfileCard: FC<ProfileCardProps> = ({}) => {
-  const { user } = useContext(UserContext);
-  const navigate = useNavigate();
-
-  const handleEdit = () => {
-    navigate('/edit/:id');
-  };
+  const { user, currentUser } = useContext(UserContext);
+  const [isEditing, setIsEditing] = useState<boolean>(false);
 
   return (
     <CardContainer>
-      {user?.photoURL ? (
-        <Avatar src={user?.photoURL} alt='user' />
+      {currentUser?.photoURL ? (
+        <Avatar src={currentUser?.photoURL} alt='user' />
       ) : (
         <GrUser size={100} />
       )}
-      <UserName>{user?.displayName}</UserName>
-      <UserEmail>{user?.email}</UserEmail>
-      <Edit onClick={() => handleEdit()}>
+      <UserName>{currentUser?.username}</UserName>
+      <UserEmail>{currentUser?.email}</UserEmail>
+      <p>{currentUser?.location}</p>
+      <p>{currentUser?.company}</p>
+      <Edit onClick={() => setIsEditing(!isEditing)}>
         <MdOutlineEdit />
       </Edit>
+
+      {isEditing && <ProfileEdit onClose={() => setIsEditing(false)} />}
     </CardContainer>
   );
 };

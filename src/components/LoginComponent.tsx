@@ -1,10 +1,11 @@
-import { FC, useState } from 'react';
+import { FC, useContext, useState } from 'react';
 import { GoogleLoginAPI, LoginAPI, RegisterAPI } from '../api/AuthAPI';
 import styled from 'styled-components';
 
 import GoogleButton from 'react-google-button';
 import { toast } from 'react-toastify';
 import { Link, useNavigate } from 'react-router-dom';
+import { UserContext } from '../context/UserContext';
 
 interface LoginComponentProps {}
 
@@ -18,6 +19,7 @@ const LoginComponent: FC<LoginComponentProps> = ({}) => {
     email: '',
     password: '',
   });
+  const { user } = useContext(UserContext);
   const [showPassword, setShowPassword] = useState<boolean>(false);
 
   const handleOnChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -38,6 +40,7 @@ const LoginComponent: FC<LoginComponentProps> = ({}) => {
   const googleLogin = async () => {
     try {
       let res = await GoogleLoginAPI();
+
       toast.success('Signed in successfully');
       navigate('/home');
     } catch (error) {
