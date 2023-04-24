@@ -13,6 +13,8 @@ interface UserContextValue {
   setAllStatuses: React.Dispatch<React.SetStateAction<StatusType[]>>;
   currentUser: any;
   setCurrentUser: any;
+  currentProfile: any;
+  setCurrentProfile: any;
 }
 
 export const UserContext = createContext<UserContextValue>({
@@ -21,6 +23,8 @@ export const UserContext = createContext<UserContextValue>({
   setAllStatuses: () => {},
   currentUser: null,
   setCurrentUser: () => {},
+  currentProfile: null,
+  setCurrentProfile: () => {},
 });
 
 export const UserProvider = ({ children }: { children: React.ReactNode }) => {
@@ -28,6 +32,7 @@ export const UserProvider = ({ children }: { children: React.ReactNode }) => {
   const [currentUser, setCurrentUser] = useState<any>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [allStatuses, setAllStatuses] = useState([] as StatusType[]);
+  const [currentProfile, setCurrentProfile] = useState<any>(null);
 
   useEffect(() => {
     setIsLoading(true);
@@ -64,6 +69,8 @@ export const UserProvider = ({ children }: { children: React.ReactNode }) => {
     setAllStatuses,
     currentUser: currentUser,
     setCurrentUser,
+    currentProfile,
+    setCurrentProfile,
   };
 
   return (

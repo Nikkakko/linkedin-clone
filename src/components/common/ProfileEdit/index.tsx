@@ -18,16 +18,15 @@ type inputValues = {
 
 const ProfileEdit: FC<ProfileEditProps> = ({ onClose }) => {
   const { currentUser } = useContext(UserContext);
-
   const userID = currentUser?.userID;
 
   const modalRef = useRef<HTMLDivElement>(null);
   const [inputValues, setInputValues] = useState<inputValues>({
-    username: '',
-    headline: '',
-    location: '',
-    company: '',
-    college: '',
+    username: currentUser?.username || '',
+    headline: currentUser?.headline || '',
+    location: currentUser?.location || '',
+    company: currentUser?.company || '',
+    college: currentUser?.college || '',
   });
 
   function handleCloseModal(event: any) {
@@ -40,6 +39,12 @@ const ProfileEdit: FC<ProfileEditProps> = ({ onClose }) => {
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = event.target;
     setInputValues({ ...inputValues, [name]: value });
+  };
+
+  const handleSave = async () => {
+    await editProfile(inputValues, userID);
+
+    onClose();
   };
 
   return (
@@ -90,7 +95,7 @@ const ProfileEdit: FC<ProfileEditProps> = ({ onClose }) => {
               onChange={handleInputChange}
             />
           </Form>
-          <Button onClick={() => editProfile(inputValues, userID)}>Save</Button>
+          <Button onClick={handleSave}>Save</Button>
         </ModalContent>
       </ModalBox>
     </Container>

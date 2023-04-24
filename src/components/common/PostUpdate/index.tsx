@@ -5,13 +5,14 @@ import { AddStatus, getStatus } from '../../../api/FirestoreAPI';
 import { toast } from 'react-toastify';
 import { StatusType } from '../../../types';
 import PostsCard from '../PostsCard';
+import { UserContext } from '../../../context/UserContext';
 
 interface PostStatusProps {}
 
 const PostStatus: FC<PostStatusProps> = ({}) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [status, setStatus] = useState('' as string | null);
-  const [allStatuses, setAllStatuses] = useState([] as StatusType[]);
+  const { allStatuses, setAllStatuses } = useContext(UserContext);
 
   const handleAddPost = async () => {
     if (status) {
@@ -51,7 +52,7 @@ const PostStatus: FC<PostStatusProps> = ({}) => {
       <AllPosts>
         {allStatuses.length === 0 && <p>No posts yet</p>}
         {allStatuses.map((posts, index) => (
-          <PostsCard key={posts.id} posts={posts} />
+          <PostsCard key={posts.id} posts={posts} id={posts.id} />
         ))}
       </AllPosts>
     </Container>

@@ -6,6 +6,7 @@ import {
   query,
   doc,
   updateDoc,
+  where,
 } from 'firebase/firestore';
 
 import { auth, firestore } from '../firebaseConfig';
@@ -65,6 +66,7 @@ export const postUserData = async () => {
       if (filteredUser.length === 0) {
         // add user to the database
         addDoc(userRef, {
+          uid: auth.currentUser?.uid,
           username: auth.currentUser?.displayName,
           email: auth.currentUser?.email,
           photoURL: auth.currentUser?.photoURL,
@@ -95,6 +97,38 @@ export const getCurretnUser = async (setCurrentUser: any) => {
   });
 
   return unsubscribe;
+};
+
+export const getSingleUser = (setCurrentProfile: any, uid: string) => {
+  // get single user by uid from the database
+
+  const q = query(userRef, orderBy('email', 'desc'));
+
+  try {
+    onSnapshot(q, snapshot => {
+      const users = snapshot.docs.map(doc => ({
+        id: doc.id,
+        ...doc.data(),
+      }));
+
+      const filteredUser = users.filter((user: any) => user.uid === uid)[0];
+
+      setCurrentProfile(filteredUser);
+    });
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const getSingleStatus = (setAllStatus: any, id: string) => {
+  const singlePostQuery = query(docRef, where('userID', '==', id));
+  onSnapshot(singlePostQuery, response => {
+    setAllStatus(
+      response.docs.map(docs => {
+        return { ...docs.data(), id: docs.id };
+      })
+    );
+  });
 };
 
 export const editProfile = async (object: any, id: string) => {

@@ -2,19 +2,26 @@ import { FC, useState } from 'react';
 import styled from 'styled-components';
 import { StatusType } from '../../../types';
 import { getCurrentTimeStamp } from '../../../helpers/useMoment';
+import { useNavigate } from 'react-router-dom';
 
 interface PostsCardProps {
   posts: StatusType;
+  id?: string;
 }
 
-const PostsCard: FC<PostsCardProps> = ({ posts }) => {
+const PostsCard: FC<PostsCardProps> = ({ posts, id }) => {
   const [seeMore, setSeeMore] = useState<boolean>(false);
+
+  const navigate = useNavigate();
+
+  const profileNavigate = () => {
+    navigate(`/profile/${posts.uid}`);
+  };
 
   return (
     <Container>
-      <Username>{posts.username}</Username>
+      <Username onClick={profileNavigate}>{posts.username}</Username>
       <TimeStamp>{getCurrentTimeStamp(posts.timestamp)}</TimeStamp>
-
       <Status>{posts.status}</Status>
     </Container>
   );
@@ -55,6 +62,14 @@ const Username = styled.p`
   font-weight: 600;
   color: rgba(0, 0, 0, 0.9);
   text-transform: Capitalize;
+
+  cursor: pointer;
+
+  &:hover {
+    text-decoration: underline;
+
+    color: #0a66c2;
+  }
 `;
 
 export default PostsCard;

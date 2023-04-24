@@ -1,34 +1,101 @@
-import { FC, useContext, useState } from 'react';
+import { FC, useContext, useEffect, useMemo, useState } from 'react';
 import styled from 'styled-components';
 import { UserContext } from '../../../context/UserContext';
 import { GrUser } from 'react-icons/gr';
 import { MdOutlineEdit } from 'react-icons/md';
 import ProfileEdit from '../ProfileEdit';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate, useParams } from 'react-router-dom';
+import PostsCard from '../PostsCard';
+import { getSingleStatus, getSingleUser } from '../../../api/FirestoreAPI';
 
 interface ProfileCardProps {}
 
 const ProfileCard: FC<ProfileCardProps> = ({}) => {
-  const { user, currentUser } = useContext(UserContext);
+  const {
+    currentUser,
+    allStatuses,
+    setCurrentUser,
+    currentProfile,
+    setAllStatuses,
+    setCurrentProfile,
+  } = useContext(UserContext);
   const [isEditing, setIsEditing] = useState<boolean>(false);
 
-  return (
-    <CardContainer>
-      {currentUser?.photoURL ? (
-        <Avatar src={currentUser?.photoURL} alt='user' />
-      ) : (
-        <GrUser size={100} />
-      )}
-      <UserName>{currentUser?.username}</UserName>
-      <UserEmail>{currentUser?.email}</UserEmail>
-      <p>{currentUser?.location}</p>
-      <p>{currentUser?.company}</p>
-      <Edit onClick={() => setIsEditing(!isEditing)}>
-        <MdOutlineEdit />
-      </Edit>
+  const { id } = useParams<{ id: string }>();
 
-      {isEditing && <ProfileEdit onClose={() => setIsEditing(false)} />}
-    </CardContainer>
+  useEffect(() => {
+    if (id === currentUser?.uid) {
+      setCurrentProfile(null);
+    } else {
+      getSingleUser(setCurrentProfile, id as string);
+    }
+  }, [id]);
+
+  console.log(currentProfile);
+
+  return (
+    <>
+      <CardContainer>
+        {currentProfile ? (
+          currentProfile.photoURL !== null ? (
+            <Avatar src={currentProfile?.photoURL} />
+          ) : (
+            <GrUser size={100} />
+          )
+        ) : currentUser?.photoURL !== null ? (
+          <Avatar src={currentUser?.photoURL} />
+        ) : (
+          <GrUser size={100} />
+        )}
+
+        <UserInfo>
+          <div>
+            <UserName>
+              {currentProfile
+                ? currentProfile?.username
+                : currentUser?.username}
+            </UserName>
+            <UserHeading>
+              {currentProfile
+                ? currentProfile?.headline
+                : currentUser?.headline}
+            </UserHeading>
+            <UserLocation>
+              {currentProfile
+                ? currentProfile?.location
+                : currentUser?.location}
+            </UserLocation>
+          </div>
+
+          <RightInfo>
+            <UserCompany>
+              {currentProfile ? currentProfile?.company : currentUser?.company}
+            </UserCompany>
+            <UserCollage>
+              {currentProfile ? currentProfile?.college : currentUser?.college}
+            </UserCollage>
+          </RightInfo>
+        </UserInfo>
+
+        {/* disable if currentProfile length is more than 0  */}
+
+        {currentProfile ? null : (
+          <Edit onClick={() => setIsEditing(!isEditing)}>
+            <MdOutlineEdit />
+          </Edit>
+        )}
+
+        {isEditing && <ProfileEdit onClose={() => setIsEditing(false)} />}
+      </CardContainer>
+
+      <AllPosts>
+        {allStatuses.length === 0 && <p>No posts yet</p>}
+        {allStatuses.map(
+          (posts, index) =>
+            posts.uid === id && <PostsCard key={index} posts={posts} />
+        )}
+      </AllPosts>
+    </>
   );
 };
 
@@ -47,6 +114,11 @@ const UserName = styled.h3`
   color: rgba(0, 0, 0, 0.9);
   font-size: 24px;
   font-weight: 600;
+`;
+
+const UserInfo = styled.div`
+  display: flex;
+  justify-content: space-between;
 `;
 
 const UserEmail = styled.p`
@@ -88,4 +160,40 @@ const Edit = styled.div`
   }
 `;
 
+const UserHeading = styled.h4`
+  /* margin-top: 10px; */
+  font-family: system-ui;
+  font-size: 16px;
+  font-weight: 400;
+  color: rgba(0, 0, 0, 0.9);
+  width: 320px;
+  line-height: 20px;
+`;
+
+const UserCompany = styled.p``;
+
+const UserCollage = styled.p``;
+
+const UserLocation = styled.p``;
+
+const RightInfo = styled.div`
+  p {
+    font-family: system-ui;
+    font-size: 16px;
+    font-weight: 600;
+    margin-top: 10px;
+  }
+`;
+
+const AllPosts = styled.div`
+  margin: 32px auto;
+  width: 80%;
+  height: 100%;
+
+  display: flex;
+  flex-direction: column;
+
+  align-items: center;
+  gap: 20px;
+`;
 export default ProfileCard;

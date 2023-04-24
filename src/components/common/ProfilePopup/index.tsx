@@ -8,13 +8,19 @@ import { useNavigate } from 'react-router-dom';
 interface ProfilePopupProps {}
 
 const ProfilePopup: FC<ProfilePopupProps> = ({}) => {
-  const { user } = useContext(UserContext);
+  const { user, currentUser } = useContext(UserContext);
   const navigate = useNavigate();
 
   const handleLogout = () => {
     onLogout();
     navigate('/');
   };
+
+  const goToProfile = () => {
+    navigate(`/profile/${currentUser?.uid}`);
+  };
+
+  console.log(currentUser);
 
   return (
     <Container>
@@ -24,8 +30,8 @@ const ProfilePopup: FC<ProfilePopupProps> = ({}) => {
         <>
           <Wrapper>
             <ImageWrapper>
-              {user?.photoURL ? (
-                <img src={user?.photoURL} alt='user' />
+              {currentUser?.photoURL ? (
+                <img src={currentUser?.photoURL} alt='user' />
               ) : (
                 <GrUser />
               )}
@@ -39,17 +45,11 @@ const ProfilePopup: FC<ProfilePopupProps> = ({}) => {
                 gap: '12px',
               }}
             >
-              <Name>{user?.displayName}</Name>
-              {/* <Headline>{user?.email}</Headline> */}
+              <Name>{currentUser?.username}</Name>
+              <Headline>{currentUser?.headline}</Headline>
             </div>
           </Wrapper>
-          <ViewProfile
-            onClick={() => {
-              navigate('/profile');
-            }}
-          >
-            View Profile
-          </ViewProfile>
+          <ViewProfile onClick={goToProfile}>View Profile</ViewProfile>
           <LogoutBtn onClick={handleLogout}>Logout</LogoutBtn>
         </>
       )}
@@ -59,7 +59,7 @@ const ProfilePopup: FC<ProfilePopupProps> = ({}) => {
 
 const Container = styled.div`
   border: 1px solid #a8a8a8;
-  width: 200px;
+  width: 250px;
   height: auto;
   background-color: whitesmoke;
   border-radius: 5px;
@@ -100,6 +100,8 @@ const ImageWrapper = styled.div`
 
 const Wrapper = styled.div`
   display: flex;
+
+  width: 100%;
 `;
 
 const Name = styled.p`
@@ -116,7 +118,7 @@ const Headline = styled.p`
   color: rgba(0, 0, 0, 0.9);
   margin-top: -15px;
 
-  max-width: 100px;
+  max-width: 150px;
 `;
 
 const ViewProfile = styled.button`

@@ -15,4 +15,5 @@ export interface StatusType {
   timestamp: firebase.firestore.Timestamp;
   uid: string;
   username: string;
+  email: string;
 }
